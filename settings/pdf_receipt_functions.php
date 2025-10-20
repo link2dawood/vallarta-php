@@ -132,7 +132,7 @@ function buildReceiptHTML($order_data, $settings, $receipt_id) {
         <div class="info-row"><span class="label">Phone:</span>' . htmlspecialchars($order_data['number']) . '</div>
         <div class="info-row"><span class="label">Email:</span>' . htmlspecialchars($order_data['email']) . '</div>
         <div class="info-row"><span class="label">Payment Method:</span>' . htmlspecialchars($order_data['method']) . '</div>
-        <div class="info-row"><span class="label">Client ID:</span>CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT) . '</div>
+        <div class="info-row"><span class="label">Client ID:</span>' . (!empty($order_data['client_number']) ? 'CL-' . $order_data['client_number'] : 'CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT)) . '</div>
     </div>
 
     <div class="section-title">Delivery Address</div>
@@ -240,7 +240,7 @@ function buildReceiptHTML($order_data, $settings, $receipt_id) {
                     <strong>You can make a deposit from any Oxxo location using this payment information:</strong><br><br>
                     <strong>Account Number:</strong> 4152 3142 6559 7115<br>
                     <strong>Bank:</strong> BBVA<br>
-                    <strong>Reference:</strong> CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT) . ' (Your Client Number)<br><br>
+                    <strong>Reference:</strong> ' . (!empty($order_data['client_number']) ? 'CL-' . $order_data['client_number'] : 'CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT)) . ' (Your Client Number)<br><br>
                     Send receipt photo via WhatsApp: ' . $settings['whatsapp_number'] . '
                 </div>';
             break;
@@ -251,7 +251,7 @@ function buildReceiptHTML($order_data, $settings, $receipt_id) {
                     <strong>You can make a deposit from your banking app or any BBVA ATM using this payment information:</strong><br><br>
                     <strong>Account Number:</strong> 4152 3142 6559 7115<br>
                     <strong>Bank:</strong> BBVA<br>
-                    <strong>Reference:</strong> CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT) . ' (Your Client Number)<br><br>
+                    <strong>Reference:</strong> ' . (!empty($order_data['client_number']) ? 'CL-' . $order_data['client_number'] : 'CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT)) . ' (Your Client Number)<br><br>
                     Send receipt to: info@420vallarta.com or WhatsApp: ' . $settings['whatsapp_number'] . '
                 </div>';
             break;
@@ -271,7 +271,7 @@ function buildReceiptHTML($order_data, $settings, $receipt_id) {
                 <div style="margin: 10px 0; text-align: left;">
                     <strong>Please send the total amount to this email:</strong><br>
                     <strong>pvblessings1@gmail.com</strong><br><br>
-                    <strong>Reference:</strong> CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT) . ' (Your Client Number)<br><br>
+                    <strong>Reference:</strong> ' . (!empty($order_data['client_number']) ? 'CL-' . $order_data['client_number'] : 'CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT)) . ' (Your Client Number)<br><br>
                     <div style="background: #fff3cd; padding: 8px; border-radius: 5px;">
                         <strong>⚠️ Important:</strong> Please do not mention 420 or anything cannabis related as payment platforms are sensitive to this. Refer to your client number as a reference.
                     </div>
@@ -424,7 +424,7 @@ function buildEmailBody($order_data, $settings, $receipt_id) {
                 <h3>Order Summary:</h3>
                 <p><strong>Order Total:</strong> <span class="total">$' . number_format($total_mxn, 2) . ' MXN / $' . number_format($total_usd, 2) . ' USD</span></p>
                 <p><strong>Payment Method:</strong> ' . htmlspecialchars($order_data['method']) . '</p>
-                <p><strong>Client ID:</strong> CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT) . '</p>
+                <p><strong>Client ID:</strong> ' . (!empty($order_data['client_number']) ? 'CL-' . $order_data['client_number'] : 'CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT)) . '</p>
 
                 <h3>📄 Your Receipt</h3>
                 <p>Please find your detailed receipt attached as a PDF document. This receipt includes:</p>
@@ -455,7 +455,7 @@ function buildEmailBody($order_data, $settings, $receipt_id) {
                 <strong>You can make a deposit from any Oxxo location using this payment information:</strong><br><br>
                 <strong>Account Number:</strong> 4152 3142 6559 7115<br>
                 <strong>Bank:</strong> BBVA<br>
-                <strong>Reference:</strong> CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT) . ' (Your Client Number)<br><br>
+                <strong>Reference:</strong> ' . (!empty($order_data['client_number']) ? 'CL-' . $order_data['client_number'] : 'CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT)) . ' (Your Client Number)<br><br>
                 Send receipt photo via WhatsApp: ' . $settings['whatsapp_number'];
             break;
 
@@ -464,7 +464,7 @@ function buildEmailBody($order_data, $settings, $receipt_id) {
                 <strong>You can make a deposit from your banking app or any BBVA ATM using this payment information:</strong><br><br>
                 <strong>Account Number:</strong> 4152 3142 6559 7115<br>
                 <strong>Bank:</strong> BBVA<br>
-                <strong>Reference:</strong> CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT) . ' (Your Client Number)<br><br>
+                <strong>Reference:</strong> ' . (!empty($order_data['client_number']) ? 'CL-' . $order_data['client_number'] : 'CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT)) . ' (Your Client Number)<br><br>
                 Send receipt to: info@420vallarta.com or WhatsApp: ' . $settings['whatsapp_number'];
             break;
 
@@ -479,7 +479,7 @@ function buildEmailBody($order_data, $settings, $receipt_id) {
             $email_payment_instructions = '
                 <strong>Please send the total amount to this email:</strong><br>
                 <strong>pvblessings1@gmail.com</strong><br><br>
-                <strong>Reference:</strong> CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT) . ' (Your Client Number)<br><br>
+                <strong>Reference:</strong> ' . (!empty($order_data['client_number']) ? 'CL-' . $order_data['client_number'] : 'CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT)) . ' (Your Client Number)<br><br>
                 <div style="background: #fff3cd; padding: 10px; border-radius: 5px;">
                     <strong>⚠️ Important:</strong> Please do not mention 420 or anything cannabis related as payment platforms are sensitive to this. Refer to your client number as a reference.
                 </div>';
@@ -530,7 +530,7 @@ function buildEmailBody($order_data, $settings, $receipt_id) {
                 <h3>Order Summary:</h3>
                 <p><strong>Order Total:</strong> <span class="total">$' . number_format($total_mxn, 2) . ' MXN / $' . number_format($total_usd, 2) . ' USD</span></p>
                 <p><strong>Payment Method:</strong> ' . htmlspecialchars($order_data['method']) . '</p>
-                <p><strong>Client ID:</strong> CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT) . '</p>
+                <p><strong>Client ID:</strong> ' . (!empty($order_data['client_number']) ? 'CL-' . $order_data['client_number'] : 'CV-' . str_pad($order_data['id'], 6, '0', STR_PAD_LEFT)) . '</p>
 
                 <h3>📄 Your Receipt</h3>
                 <p>Please find your detailed receipt attached as a PDF document. This receipt includes:</p>

@@ -25,7 +25,8 @@ if (isset($_POST['finalize_order'])) {
         'discount' => floatval($_POST['discount']),
         'refund' => floatval($_POST['refund']),
         'eta' => trim($_POST['eta']),
-        'delivery_address' => trim($_POST['delivery_address'])
+        'delivery_address' => trim($_POST['delivery_address']),
+        'client_number' => trim($_POST['client_number'])
     );
 
     // Process complimentary items
@@ -57,6 +58,9 @@ if (isset($_POST['finalize_order'])) {
     if (empty($custom_settings['eta'])) {
         $errors[] = "ETA is required";
     }
+    if (empty($custom_settings['client_number'])) {
+        $errors[] = "Client ID is required";
+    }
 
     if (empty($errors)) {
         // Calculate final total
@@ -78,7 +82,8 @@ if (isset($_POST['finalize_order'])) {
             final_total = '$final_total',
             eta = '" . mysqli_real_escape_string($con, $custom_settings['eta']) . "',
             complimentary_items = '" . mysqli_real_escape_string($con, $complimentary_json) . "',
-            delivery_address_final = '" . mysqli_real_escape_string($con, $custom_settings['delivery_address']) . "'
+            delivery_address_final = '" . mysqli_real_escape_string($con, $custom_settings['delivery_address']) . "',
+            client_number = '" . mysqli_real_escape_string($con, $custom_settings['client_number']) . "'
             WHERE id = $order_id";
 
         // Execute the query
@@ -194,7 +199,8 @@ $config = getReceiptConfig();
                                     <strong>Customer:</strong> <?php echo htmlspecialchars($order_data['name']); ?><br>
                                     <strong>Email:</strong> <?php echo htmlspecialchars($order_data['email']); ?><br>
                                     <strong>Phone:</strong> <?php echo htmlspecialchars($order_data['number']); ?><br>
-                                    <strong>Payment:</strong> <?php echo htmlspecialchars($order_data['method']); ?>
+                                    <strong>Payment:</strong> <?php echo htmlspecialchars($order_data['method']); ?><br>
+                                    <strong>Current Client ID:</strong> <span class="text-muted"><?php echo !empty($order_data['client_number']) ? 'CL-' . $order_data['client_number'] : 'Not set'; ?></span>
                                 </div>
                                 <div class="col-md-6">
                                     <strong>Order Date:</strong> <?php echo date('M j, Y g:i A', strtotime($order_data['dat'])); ?><br>
@@ -236,6 +242,15 @@ $config = getReceiptConfig();
                                                 <input type="number" step="0.01" class="form-control" id="refund" name="refund"
                                                        value="<?php echo !empty($order_data['refund']) ? $order_data['refund'] : '0.00'; ?>">
                                             </div>
+                                        </div>
+
+                                        <!-- Client Information -->
+                                        <div class="mb-3">
+                                            <label for="client_number" class="form-label">Client ID</label>
+                                            <input type="text" class="form-control" id="client_number" name="client_number"
+                                                   value="<?php echo !empty($order_data['client_number']) ? $order_data['client_number'] : ''; ?>"
+                                                   placeholder="e.g., CL-101200" required>
+                                            <div class="form-text">This will be displayed as CV-XXXXXX in the receipt</div>
                                         </div>
 
                                         <!-- Delivery Information -->
