@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Method UX Demo - 420 Vallarta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .demo-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .before-after {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .before, .after {
+            flex: 1;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .before {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+        }
+        .after {
+            background: #d4edda;
+            border: 1px solid #28a745;
+        }
+        .demo-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .inputBox {
+            margin: 15px 0;
+        }
+        .inputBox span {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .inputBox select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .payment-instructions {
+            display: none;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .payment-instruction {
+            display: none;
+        }
+        .payment-instruction h4 {
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        .instruction-content {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .note {
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .feature {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+        }
+        .demo-btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .demo-btn:hover {
+            background: #0056b3;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>💳 Payment Method UX Improvements</h1>
+        <p><strong>Enhanced checkout experience with dynamic payment instructions</strong></p>
+
+        <div class="before-after">
+            <div class="before">
+                <h3>❌ OLD UX</h3>
+                <ul>
+                    <li>Generic payment dropdown</li>
+                    <li>No instructions provided</li>
+                    <li>Users had to click external links</li>
+                    <li>Left checkout page for payment info</li>
+                    <li>Confusing payment process</li>
+                    <li>High abandonment rate</li>
+                </ul>
+            </div>
+            <div class="after">
+                <h3>✅ NEW UX</h3>
+                <ul>
+                    <li>Dynamic payment instructions</li>
+                    <li>Inline guidance (no redirects)</li>
+                    <li>Real-time amount display</li>
+                    <li>Step-by-step instructions</li>
+                    <li>Method-specific guidance</li>
+                    <li>Seamless checkout flow</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>🎯 Live Demo</h2>
+        <p>Select a payment method below to see the dynamic instructions:</p>
+
+        <div class="demo-form">
+            <div class="inputBox">
+                <span>Payment Method</span>
+                <select id="payment-method" onchange="showPaymentInstructions()">
+                    <option value="">Select Payment Method</option>
+                    <option value="Oxxo Transfer">Oxxo Transfer</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="Visa/MasterCard/American Express">Visa/MasterCard/American Express</option>
+                    <option value="Paypal">Paypal</option>
+                    <option value="ApplePay/Google Pay">ApplePay/Google Pay</option>
+                </select>
+            </div>
+
+            <!-- Dynamic Payment Instructions -->
+            <div id="payment-instructions" class="payment-instructions">
+
+                <!-- Oxxo Transfer Instructions -->
+                <div id="instructions-oxxo" class="payment-instruction">
+                    <h4>💳 Oxxo Transfer Instructions</h4>
+                    <div class="instruction-content">
+                        <p><strong>Step 1:</strong> Visit any Oxxo store near you</p>
+                        <p><strong>Step 2:</strong> Tell the cashier you want to make a "Depósito" (deposit)</p>
+                        <p><strong>Step 3:</strong> Provide this account information:</p>
+                        <ul>
+                            <li><strong>Account Holder:</strong> 420 Vallarta Services</li>
+                            <li><strong>Account Number:</strong> 4152 3138 0001 2345</li>
+                            <li><strong>Reference:</strong> Your Order ID (will be provided after placing order)</li>
+                        </ul>
+                        <p><strong>Step 4:</strong> Send us a photo of the deposit receipt via WhatsApp</p>
+                        <p><strong>💰 Amount:</strong> $<span class="instruction-total">299.99</span> MXN</p>
+                    </div>
+                    <div class="note">
+                        <strong>Note:</strong> Your order will be confirmed within 30 minutes of payment verification
+                    </div>
+                </div>
+
+                <!-- Bank Transfer Instructions -->
+                <div id="instructions-bank" class="payment-instruction">
+                    <h4>🏦 Bank Transfer Instructions</h4>
+                    <div class="instruction-content">
+                        <p><strong>Transfer to:</strong></p>
+                        <ul>
+                            <li><strong>Bank:</strong> BBVA Bancomer</li>
+                            <li><strong>Account Holder:</strong> 420 Vallarta Services S.A. de C.V.</li>
+                            <li><strong>Account Number:</strong> 0123456789</li>
+                            <li><strong>CLABE:</strong> 012345678901234567</li>
+                            <li><strong>Reference:</strong> Your Order ID + Phone Number</li>
+                        </ul>
+                        <p><strong>💰 Amount:</strong> $<span class="instruction-total">299.99</span> MXN</p>
+                    </div>
+                    <div class="note">
+                        <strong>Confirmation:</strong> Send transfer receipt to info@420vallarta.com or WhatsApp
+                    </div>
+                </div>
+
+                <!-- Credit Card Instructions -->
+                <div id="instructions-card" class="payment-instruction">
+                    <h4>💳 Credit/Debit Card Payment</h4>
+                    <div class="instruction-content">
+                        <p><strong>Secure Payment via Stripe:</strong></p>
+                        <ul>
+                            <li>✅ Visa, MasterCard, American Express accepted</li>
+                            <li>🔒 SSL encrypted secure payment</li>
+                            <li>🌍 International cards welcome</li>
+                            <li>💱 Automatic currency conversion</li>
+                        </ul>
+                        <p><strong>💰 Amount:</strong> $<span class="instruction-total">299.99</span> USD</p>
+                    </div>
+                    <div class="instruction-content" style="background: #e7f3ff;">
+                        <p><strong>Payment Process:</strong></p>
+                        <ol>
+                            <li>Click "Order Now" to proceed</li>
+                            <li>You'll be redirected to secure Stripe payment</li>
+                            <li>Enter your card details</li>
+                            <li>Confirm payment</li>
+                            <li>Instant order confirmation</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- PayPal Instructions -->
+                <div id="instructions-paypal" class="payment-instruction">
+                    <h4>💙 PayPal Payment</h4>
+                    <div class="instruction-content">
+                        <p><strong>Send Payment to:</strong></p>
+                        <ul>
+                            <li><strong>PayPal Email:</strong> payments@420vallarta.com</li>
+                            <li><strong>Payment Type:</strong> Goods & Services</li>
+                            <li><strong>Reference:</strong> Your Order ID (provided after placing order)</li>
+                        </ul>
+                        <p><strong>💰 Amount:</strong> $<span class="instruction-total">299.99</span> USD</p>
+                    </div>
+                    <div class="note">
+                        <strong>Alternative:</strong> We can send you a PayPal invoice after order confirmation
+                    </div>
+                </div>
+
+                <!-- Apple Pay / Google Pay Instructions -->
+                <div id="instructions-applepay" class="payment-instruction">
+                    <h4>📱 Apple Pay / Google Pay</h4>
+                    <div class="instruction-content">
+                        <p><strong>Digital Wallet Payment:</strong></p>
+                        <ul>
+                            <li>🍎 Apple Pay (iPhone, iPad, Mac, Apple Watch)</li>
+                            <li>🤖 Google Pay (Android devices)</li>
+                            <li>⚡ One-touch payment</li>
+                            <li>🔒 Biometric security</li>
+                        </ul>
+                        <p><strong>💰 Amount:</strong> $<span class="instruction-total">299.99</span> USD</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature">
+            <h3>🚀 Key Improvements</h3>
+            <ul>
+                <li><strong>No External Links:</strong> All payment info displayed inline</li>
+                <li><strong>Dynamic Instructions:</strong> Only show relevant payment method details</li>
+                <li><strong>Real-time Amounts:</strong> Payment totals update automatically</li>
+                <li><strong>Visual Hierarchy:</strong> Clear step-by-step instructions</li>
+                <li><strong>Mobile Optimized:</strong> Perfect experience on all devices</li>
+                <li><strong>Reduced Friction:</strong> Users stay on checkout page</li>
+            </ul>
+        </div>
+
+        <div class="feature">
+            <h3>💡 UX Benefits</h3>
+            <ul>
+                <li><span class="highlight">Higher Conversion:</span> Users don't leave checkout page</li>
+                <li><span class="highlight">Reduced Confusion:</span> Clear payment instructions for each method</li>
+                <li><span class="highlight">Better Mobile UX:</span> No tiny external links to click</li>
+                <li><span class="highlight">Instant Feedback:</span> Instructions appear immediately</li>
+                <li><span class="highlight">Professional Look:</span> Integrated, seamless experience</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="checkout.php" class="demo-btn">
+                Try Live Checkout
+            </a>
+            <a href="product_selector.php" class="demo-btn">
+                Smart Product Selector
+            </a>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; color: #666;">
+            <p><strong>420 Vallarta</strong> - Enhanced Payment UX</p>
+            <p>Making checkout easier and more intuitive</p>
+        </div>
+    </div>
+
+    <script>
+        function showPaymentInstructions() {
+            const paymentMethod = document.getElementById('payment-method').value;
+            const instructionsContainer = document.getElementById('payment-instructions');
+
+            // Hide all payment instruction blocks
+            document.querySelectorAll('.payment-instruction').forEach(function(element) {
+                element.style.display = 'none';
+            });
+
+            // Show the container and appropriate instruction block
+            if (paymentMethod) {
+                instructionsContainer.style.display = 'block';
+
+                // Map payment methods to instruction IDs
+                const instructionMap = {
+                    'Oxxo Transfer': 'instructions-oxxo',
+                    'Bank Transfer': 'instructions-bank',
+                    'Visa/MasterCard/American Express': 'instructions-card',
+                    'Paypal': 'instructions-paypal',
+                    'ApplePay/Google Pay': 'instructions-applepay'
+                };
+
+                const instructionId = instructionMap[paymentMethod];
+                if (instructionId) {
+                    document.getElementById(instructionId).style.display = 'block';
+                }
+
+                // Smooth scroll to instructions
+                instructionsContainer.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
+                });
+            } else {
+                instructionsContainer.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

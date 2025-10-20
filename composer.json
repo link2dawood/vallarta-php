@@ -1,0 +1,8 @@
+{
+    "require": {
+        "abraham/twitteroauth": "^2.0",
+        "composer/ca-bundle": "^1.2",
+        "facebook/graph-sdk": "^5.1",
+        "tecnickcom/tcpdf": "^6.4"
+    }
+}
