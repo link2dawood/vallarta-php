@@ -211,6 +211,21 @@ global $con;
                             </li>
                             <li class="nav-item dropdown">
                               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Brand                                </a>
+                              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <?php
+                                    $sql_brand = "Select * from brand ORDER BY brand_name";
+                                    $result_brand = mysqli_query($con,$sql_brand);
+                                    while ($row = mysqli_fetch_assoc($result_brand)){
+                                    ?>
+                                <a class="dropdown-item" href="movie.php?brand=<?php echo $row['id']?>"><?php echo $row['brand_name']?></a>
+                                <?php
+                                    }
+                                    ?>
+                              </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Category                                </a>
                               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <?php

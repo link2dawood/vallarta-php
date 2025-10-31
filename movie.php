@@ -42,7 +42,7 @@ include 'header.php';
 
         <?php
         $pagination = '';
-        if (isset($_GET['cat']) || isset($_GET['keyword']) || isset($_GET['reg']) || isset($_GET['grp'])) {
+        if (isset($_GET['cat']) || isset($_GET['keyword']) || isset($_GET['reg']) || isset($_GET['grp']) || isset($_GET['brand'])) {
           ?>
           <div class="row">
             <?php
@@ -66,6 +66,15 @@ include 'header.php';
               $pages = ceil($total / $halaman);
               $query = $con->query("SELECT * FROM movies LEFT JOIN grp ON movies.group_id = grp.id JOIN cat ON movies.cat_id = cat.id WHERE grp.id = '$grp_id' ORDER BY movies.movie_id DESC LIMIT $mulai, $halaman");
               $pagination = 'grp=' . $grp_id;
+            }
+
+            if (isset($_GET['brand'])) {
+              $brand_id = $_GET['brand'];
+              $result = $con->query("SELECT * FROM movies LEFT JOIN brand ON movies.brand_id = brand.id WHERE brand.id = '$brand_id'");
+              $total = mysqli_num_rows($result);
+              $pages = ceil($total / $halaman);
+              $query = $con->query("SELECT * FROM movies LEFT JOIN brand ON movies.brand_id = brand.id JOIN cat ON movies.cat_id = cat.id WHERE brand.id = '$brand_id' ORDER BY movies.movie_id DESC LIMIT $mulai, $halaman");
+              $pagination = 'brand=' . $brand_id;
             }
 
             if (isset($_GET['reg'])) {

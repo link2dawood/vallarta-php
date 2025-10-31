@@ -31,6 +31,18 @@
         </select>
     </div>
     <div class="form-group">
+        <label>Brand</label>
+        <select class="form-control" name="brand_id">
+            <option value="">None</option>
+            <?php
+            $brands = $con->query("SELECT * FROM brand ORDER BY brand_name");
+            while ($b = mysqli_fetch_array($brands)){
+                ?>
+                <option value="<?= $b['id'];?>"><?= $b['brand_name'];?></option>
+            <?php  }?>
+        </select>
+    </div>
+    <div class="form-group">
       <label>Region</label>
       <select class="form-control" name="region_id" required="required">
         <?php

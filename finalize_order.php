@@ -3,6 +3,7 @@
 
 require_once('settings/db.php');
 require_once('settings/receipt_functions.php');
+require_once('settings/whatsapp_invoice_functions.php');
 session_start();
 
 // Check if user is logged in (admin access)
@@ -367,6 +368,78 @@ $config = getReceiptConfig();
                             </div>
                         </div>
                     </form>
+                    
+                    <!-- WhatsApp Invoice Section -->
+                    <?php if ($order_data): ?>
+                    <div class="card mt-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">📱 WhatsApp Invoice</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">
+                                This plain-text invoice can be copied and pasted directly into WhatsApp messages. 
+                                Perfect for quick sharing with customers!
+                            </p>
+                            
+                            <?php
+                            // Generate WhatsApp invoice
+                            $whatsapp_settings = array(
+                                'delivery_fee' => !empty($order_data['delivery_fee']) ? $order_data['delivery_fee'] : $config['default_delivery_fee'],
+                                'discount' => !empty($order_data['discount']) ? $order_data['discount'] : 0,
+                                'refund' => !empty($order_data['refund']) ? $order_data['refund'] : 0,
+                                'eta' => !empty($order_data['eta']) ? $order_data['eta'] : $config['default_eta'],
+                                'delivery_address' => !empty($order_data['delivery_address_final']) ? $order_data['delivery_address_final'] : $order_data['adresse'],
+                                'client_number' => !empty($order_data['client_number']) ? $order_data['client_number'] : (100000 + $order_id)
+                            );
+                            
+                            // Add complimentary items if available
+                            if (!empty($order_data['complimentary_items'])) {
+                                $decoded = json_decode($order_data['complimentary_items'], true);
+                                if (is_array($decoded)) {
+                                    $whatsapp_settings['complimentary_items'] = $decoded;
+                                }
+                            }
+                            
+                            $whatsapp_result = generateWhatsAppInvoice($order_id, $whatsapp_settings);
+                            
+                            if ($whatsapp_result['success']):
+                            ?>
+                            
+                            <div class="position-relative">
+                                <textarea 
+                                    id="whatsapp-invoice" 
+                                    class="form-control font-monospace" 
+                                    style="font-size: 0.85rem; white-space: pre-wrap; min-height: 500px; background-color: #f8f9fa;" 
+                                    readonly><?php echo htmlspecialchars($whatsapp_result['message']); ?></textarea>
+                                
+                                <button 
+                                    type="button" 
+                                    class="btn btn-success mt-3" 
+                                    id="copy-whatsapp-btn"
+                                    onclick="copyWhatsAppInvoice()">
+                                    📋 Copy to Clipboard
+                                </button>
+                                
+                                <button 
+                                    type="button" 
+                                    class="btn btn-outline-success mt-3 ms-2" 
+                                    onclick="openWhatsAppWeb()">
+                                    💬 Open WhatsApp Web
+                                </button>
+                                
+                                <div id="copy-success" class="alert alert-success mt-3" style="display:none;">
+                                    ✅ WhatsApp invoice copied to clipboard! Now paste it in WhatsApp.
+                                </div>
+                            </div>
+                            
+                            <?php else: ?>
+                            <div class="alert alert-danger">
+                                ❌ Error generating WhatsApp invoice: <?php echo htmlspecialchars($whatsapp_result['error']); ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
 
                 <?php endif; ?>
             </div>
@@ -374,6 +447,47 @@ $config = getReceiptConfig();
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function copyWhatsAppInvoice() {
+            const textarea = document.getElementById('whatsapp-invoice');
+            const copyBtn = document.getElementById('copy-whatsapp-btn');
+            const successAlert = document.getElementById('copy-success');
+            
+            // Select and copy
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                document.execCommand('copy');
+                
+                // Show success message
+                successAlert.style.display = 'block';
+                copyBtn.innerHTML = '✅ Copied!';
+                copyBtn.classList.remove('btn-success');
+                copyBtn.classList.add('btn-primary');
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    copyBtn.innerHTML = '📋 Copy to Clipboard';
+                    copyBtn.classList.remove('btn-primary');
+                    copyBtn.classList.add('btn-success');
+                    successAlert.style.display = 'none';
+                }, 3000);
+                
+            } catch (err) {
+                alert('Failed to copy: ' + err);
+            }
+            
+            // Deselect
+            window.getSelection().removeAllRanges();
+        }
+        
+        function openWhatsAppWeb() {
+            window.open('https://web.whatsapp.com/', '_blank');
+        }
+    </script>
+    
     <script>
         // Dynamic complimentary items management
         function addCompItem() {

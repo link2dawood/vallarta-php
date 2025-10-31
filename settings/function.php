@@ -47,6 +47,146 @@ function addcat() {
     $stmt->close();
 }
 
+// ==================== BRAND FUNCTIONS ====================
+
+if(isset($_POST['add_brand'])){
+    addbrand();
+}
+function addbrand() {
+    global $con, $errors;
+    
+    $brand_name = $_POST['brand_name'];
+    $parentOf = intval($_POST['parentsof']);
+    
+    session_start();
+    $added_by = intval($_SESSION['user_id']);
+    
+    // Validate inputs
+    if (empty($brand_name)) {
+        array_push($errors, "<span style='color: red'>Brand name is required</span>");
+        return;
+    }
+
+    // Handle "None" (0) -> NULL
+    if ($parentOf === 0) {
+        $stmt = $con->prepare("INSERT INTO brand (brand_name, parentOf, added_by) VALUES (?, NULL, ?)");
+        $stmt->bind_param("si", $brand_name, $added_by);
+    } else {
+        $stmt = $con->prepare("INSERT INTO brand (brand_name, parentOf, added_by) VALUES (?, ?, ?)");
+        $stmt->bind_param("sii", $brand_name, $parentOf, $added_by);
+    }
+
+    if ($stmt->execute()) {
+        array_push($errors, "<span style='color: green'>Brand created successfully</span>");
+    } else {
+        array_push($errors, "<span style='color: red'>Error: " . $stmt->error . "</span>");
+    }
+
+    $stmt->close();
+}
+
+if(isset($_POST['delete_brand'])){
+    delete_brand();
+}
+function delete_brand(){
+    global $con, $errors;
+    
+    if (!isset($_POST['brand_id']) || empty($_POST['brand_id'])) {
+        array_push($errors, "<span style='color: red'>Invalid brand ID</span>");
+        return;
+    }
+    
+    $brand_id = intval($_POST['brand_id']);
+    
+    // Check if brand exists
+    $check_query = "SELECT id FROM brand WHERE id = $brand_id";
+    $check_result = mysqli_query($con, $check_query);
+    
+    if (mysqli_num_rows($check_result) == 0) {
+        array_push($errors, "<span style='color: red'>Brand not found</span>");
+        return;
+    }
+    
+    // Check if this brand is used as parent by other brands
+    $parent_check = "SELECT COUNT(*) as count FROM brand WHERE parentOf = $brand_id";
+    $parent_result = mysqli_query($con, $parent_check);
+    $parent_row = mysqli_fetch_assoc($parent_result);
+    
+    if ($parent_row['count'] > 0) {
+        array_push($errors, "<span style='color: red'>Cannot delete brand: It has sub-brands</span>");
+        return;
+    }
+    
+    // Check if brand is used by products
+    $product_check = "SELECT COUNT(*) as count FROM movies WHERE brand_id = $brand_id";
+    $product_result = mysqli_query($con, $product_check);
+    $product_row = mysqli_fetch_assoc($product_result);
+    
+    if ($product_row['count'] > 0) {
+        array_push($errors, "<span style='color: red'>Cannot delete brand: It is assigned to {$product_row['count']} product(s)</span>");
+        return;
+    }
+    
+    // Perform the delete
+    $query = "DELETE FROM brand WHERE id = $brand_id";
+    $result = mysqli_query($con, $query);
+    
+    if ($result) {
+        if (mysqli_affected_rows($con) > 0) {
+            array_push($errors, "<span style='color: green'>Brand deleted successfully</span>");
+        } else {
+            array_push($errors, "<span style='color: red'>No brand was deleted</span>");
+        }
+    } else {
+        array_push($errors, "<span style='color: red'>Error deleting brand: " . mysqli_error($con) . "</span>");
+    }
+}
+
+if(isset($_POST['update_brand'])){
+    update_brand();
+}
+function update_brand(){
+    global $con, $errors;
+    
+    if (!isset($_POST['brand_id']) || empty($_POST['brand_id'])) {
+        array_push($errors, "<span style='color: red'>Invalid brand ID</span>");
+        return;
+    }
+    
+    $brand_id = intval($_POST['brand_id']);
+    $brand_name = mysqli_real_escape_string($con, $_POST['brand_name']);
+    $parentOf = intval($_POST['parentsof']);
+    
+    // Validate inputs
+    if (empty($brand_name)) {
+        array_push($errors, "<span style='color: red'>Brand name is required</span>");
+        return;
+    }
+    
+    // Prevent circular reference (brand cannot be its own parent)
+    if ($parentOf == $brand_id) {
+        array_push($errors, "<span style='color: red'>Brand cannot be its own parent</span>");
+        return;
+    }
+    
+    // Handle "None" (0) -> NULL
+    if ($parentOf === 0) {
+        $query = "UPDATE brand SET brand_name = '$brand_name', parentOf = NULL WHERE id = $brand_id";
+    } else {
+        $query = "UPDATE brand SET brand_name = '$brand_name', parentOf = $parentOf WHERE id = $brand_id";
+    }
+    
+    $result = mysqli_query($con, $query);
+    
+    if ($result) {
+        array_push($errors, "<span style='color: green'>Brand updated successfully</span>");
+        header("Location: addbrand.php");
+        exit();
+    } else {
+        array_push($errors, "<span style='color: red'>Error updating brand: " . mysqli_error($con) . "</span>");
+    }
+}
+
 if(isset($_POST['delete_cat'])){
     delete_cat();
 }

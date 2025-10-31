@@ -109,6 +109,10 @@ if (!$action) {
             <a class="nav-link" href="addregion.php">
                 <i class="fas fa-plus"></i>
                 <span>Add Region</span></a>        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="addbrand.php">
+                <i class="fas fa-tag"></i>
+                <span>Add Brand</span></a>        </li>
 		<li class="nav-item">
             <a class="nav-link" href="adduser.php">
                 <i class="fas fa-plus"></i>

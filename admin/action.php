@@ -80,6 +80,7 @@ if ($act === 'editmovie') {
     $title      = $_POST['title'] ?? '';
     $cat_id     = $_POST['cat_id'] ?? '';
     $group_id   = $_POST['group_id'] ?? '';
+    $brand_id   = $_POST['brand_id'] ?? NULL;
     $region_id  = $_POST['region_id'] ?? '';
     $short_desc = $_POST['short_desc'] ?? '';
     $ad_link    = $_POST['ad_link'] ?? '';
@@ -89,6 +90,11 @@ if ($act === 'editmovie') {
     $video_type = $_POST['video_type'] ?? '';
     $price      = $_POST['price'] ?? '';
     $unit       = $_POST['unit'] ?? '';
+    
+    // Handle empty brand_id
+    if (empty($brand_id)) {
+        $brand_id = NULL;
+    }
 
     // Thumbnail upload
     $file_loc_t = $_FILES['tupload']['tmp_name'] ?? '';
@@ -133,6 +139,7 @@ if ($act === 'editmovie') {
               SET cat_id='$cat_id',
                   region_id='$region_id',
                   group_id='$group_id',
+                  brand_id=" . ($brand_id ? "'$brand_id'" : "NULL") . ",
                   title='$title',
                   short_desc='$short_desc',
                   long_desc='$long_desc',
@@ -202,10 +209,15 @@ if ($act === 'add') {
         $video       = '';
     }
 
+    $brand_id = $_POST['brand_id'] ?? NULL;
+    if (empty($brand_id)) {
+        $brand_id = NULL;
+    }
+    
     $query = $con->query("INSERT INTO movies 
-        (title, cat_id, short_desc, long_desc, thumbnail, video_type, video, group_id, region_id, trailer, ad_img, ad_link, added_by, price, unit)
+        (title, cat_id, short_desc, long_desc, thumbnail, video_type, video, group_id, brand_id, region_id, trailer, ad_img, ad_link, added_by, price, unit)
         VALUES
-        ('$title', '$cat_id', '$short_desc', '$long_desc', '$thumbnail', '$video_types', '$video', '$group_id', '$region_id', '$trailer', '$ad_img', '$ad_link', '$added_by', '$price', '$unit')");
+        ('$title', '$cat_id', '$short_desc', '$long_desc', '$thumbnail', '$video_types', '$video', '$group_id', " . ($brand_id ? "'$brand_id'" : "NULL") . ", '$region_id', '$trailer', '$ad_img', '$ad_link', '$added_by', '$price', '$unit')");
 
     if ($query) {
         // (Optional) If you MUST run autopost first, keep this and make autopost redirect back using ?return_to=

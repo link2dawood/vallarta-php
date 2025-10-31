@@ -47,6 +47,28 @@ $m = mysqli_fetch_array($query);
         </select>
     </div>
     <div class="form-group">
+        <label>Brand</label>
+        <select class="form-control" name="brand_id">
+            <option value="">None</option>
+            <?php
+            // Get current brand name if set
+            $current_brand_name = '';
+            if (!empty($m['brand_id'])) {
+                $brand_query = $con->query("SELECT brand_name FROM brand WHERE id = {$m['brand_id']}");
+                if ($brand_row = mysqli_fetch_array($brand_query)) {
+                    $current_brand_name = $brand_row['brand_name'];
+                }
+            }
+            
+            $brands = $con->query("SELECT * FROM brand ORDER BY brand_name");
+            while ($b = mysqli_fetch_array($brands)){
+                $selected = ($m['brand_id'] == $b['id']) ? 'selected' : '';
+                ?>
+                <option value="<?= $b['id'];?>" <?= $selected; ?>><?= $b['brand_name'];?></option>
+            <?php  }?>
+        </select>
+    </div>
+    <div class="form-group">
       <label>Region</label>
       <select class="form-control" name="region_id">
         <?php
