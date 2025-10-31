@@ -17,6 +17,8 @@ function hard_redirect(string $url): void {
     exit;
 }
 
+
+
 // ------------------------------
 // Connections & deps
 // ------------------------------
